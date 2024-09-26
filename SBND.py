@@ -99,7 +99,7 @@ save_path = f'Simulations/{TYPE}-{n}-{k}/{n}-{k}_SBND-{type_NN}-{type_output}_{b
 
 os.makedirs(save_path)
 shutil.copy(__file__, save_path+'script.py')
-shutil.copy('../functions.py', save_path+'functions.py')
+shutil.copy('functions.py', save_path+'functions.py')
 np.savetxt(save_path+'/G_{}_n{}_k{}.txt'.format(TYPE, n, k), G, fmt='%d')
 np.savetxt(save_path+'/H_{}_n{}_k{}.txt'.format(TYPE, n, k), H, fmt='%d')
 
