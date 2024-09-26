@@ -1,6 +1,9 @@
 # Syndrome-Based Neural Decoder
 Implementation of model-free syndrome-based neural decoders.
 
+## Disclaimer
+The repository is still in progress. It may contain errors, so the interested user may have to get their hands a little bit dirty.
+
 ## Short summary
 This repository contains a collection of works from different articles, some of them still unpublished (see Reference). Feel free to play around with the training and simulation parameters to either reproduce the results in the papers or produce your own. Some instructions are provided in SBND.py
 
