@@ -25,6 +25,7 @@ This repository contains a collection of works from different articles, some of 
 My IEEE profile: https://ieeexplore.ieee.org/author/706500273613698
 
 "Scalable Syndrome-based Neural Decoders for Bit-Interleaved Coded Modulations" (2024)
+
 @INPROCEEDINGS{10625146,
   author={De Boni Rovella, Gastón and Benammar, Meryem and Benaddi, Tarik and Meric, Hugo},
   booktitle={2024 IEEE International Conference on Machine Learning for Communication and Networking (ICMLCN)}, 
@@ -37,6 +38,7 @@ My IEEE profile: https://ieeexplore.ieee.org/author/706500273613698
   doi={10.1109/ICMLCN59089.2024.10625146}}
 
 "Improved Syndrome-based Neural Decoder for Linear Block Codes" (2023)
+
 @INPROCEEDINGS{10436980,
   author={De Boni Rovella, Gastón and Benammar, Meryem},
   booktitle={GLOBECOM 2023 - 2023 IEEE Global Communications Conference}, 
