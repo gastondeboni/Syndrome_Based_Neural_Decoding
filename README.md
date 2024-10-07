@@ -22,7 +22,7 @@ This repository contains a collection of works from different articles, some of 
 4) Run
 
 ## Reference
-My IEEE profile: https://ieeexplore.ieee.org/author/706500273613698 \\
+My IEEE profile: https://ieeexplore.ieee.org/author/706500273613698 <br />
 My Google scholar: https://scholar.google.com/citations?user=ZcM9QRUAAAAJ&hl=en&authuser=1
 
 "Scalable Syndrome-based Neural Decoders for Bit-Interleaved Coded Modulations" (2024)
