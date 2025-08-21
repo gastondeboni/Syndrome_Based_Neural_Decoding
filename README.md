@@ -15,11 +15,14 @@ This repository contains a collection of works from different articles, some of 
 - itertools (for sparsifying the parity-check matrix)
 - maybe others...
 
-## To run a simulation...
+## To train a Syndrome-Based Neural Decoder (SBND)
 1) Download everything to a folder
-2) Open the SBND.py file
+2) Open the train_SBND.py file
 3) Choose the training and simulation parameters
 4) Run
+
+## To test a decoder (either a trained one or a classic decoder)
+1) Open test_decoders.py and follow the steps
 
 ## Reference
 My IEEE profile: https://ieeexplore.ieee.org/author/706500273613698 <br />
