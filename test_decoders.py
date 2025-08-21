@@ -1,17 +1,28 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Mon Apr  7 10:43:41 2025
+'''
+@author: Gastón De Boni Rovella
 
-@author: gaston
-"""
+This script is a testbed for different channel coding scenarios.
+Some of the variables include:
+    - Code type and size
+    - Modulation type and order
+    - Decoding method
+    - Iterative demodulation/decoding
+    - SNR range
+    - etc.
+    
+With the intention of having a single script that implements dozens of 
+configurable parameters, some combination of parameters may need a small
+tweak in the code (e.g. the iterative loop may not adapt to a hard-decision decoder).
+Don't hesitate to play around with the code.
+'''
 
 # Imports
 import numpy as np
 import matplotlib.pyplot as plt
 import shutil
 import os
-# sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import functions as F
 from sionna.phy.fec.polar import PolarSCLDecoder, PolarSCDecoder
 from sionna.phy.fec.linear import OSDecoder
@@ -33,7 +44,7 @@ time_init = time()
 max_time = 24*3600
 m_size, l_width, font_size = 3.5, 1, 8
 
-# %% CHOOSE SETTINGS FOR SIMULATIION - everything you need to change is here
+# %% CHOOSE SETTINGS FOR SIMULATIION - everything you need to change should be here
 
 # Modulation parameters
 # 1/2/3/4/... - QAM/PSK - bin/gray/SP
@@ -49,7 +60,7 @@ INTERLEAVER, SCRAMBLER, CPU_ONLY, PROGRESS = True, False, False, True
 NNDecoder_path = 'Simulations/POLAR-n64-k32_SBND-RecECCT-denoiser_512bs_5-5dB_16QAM_Hstandright_gen-random_gray_BICM ULTIMO'
 
 # Simulation parameters
-EbN0dB_list = np.arange(5, 6.1, 0.5)
+EbN0dB_list = np.arange(0, 6.1, 1)
 min_block_errors = 100
 nb_sim_max = 500
 nb_sim_min = 2
@@ -124,23 +135,6 @@ elif DECOD_METHOD == 'NN':
     # dec = tf.keras.layers.TFSMLayer(f'{NNDecoder_path}/decod_model', call_endpoint='serving_default')
     save_path = NNDecoder_path + \
         f'/test-{SymOrder}' + '-scrambled'*SCRAMBLER + '/'
-        
-#%%
-
-# mask = tf.cast(F.create_mask(H), tf.float32)
-
-# inp = tf.keras.Input(shape=(n,), name='Input')
-# x = dec.get_layer('Preprocessing')(inp)
-# x = dec.get_layer('EmbeddingLayer')(x)
-# rec = dec.get_layer('RecEncoder')
-# for _ in range(5):
-#     x = rec(x, mask=mask)
-# out = dec.get_layer('DecodingLayer')(x)
-# dec2 = tf.keras.Model(inp, out)
-
-# for i in range(len(dec.layers)):
-#     print(dec.layers[i].weights == dec2.layers[i].weights)
-
 
 # %% Save file and simulation information
 

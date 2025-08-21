@@ -1,28 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Fri Feb 16 11:39:05 2024
-
-@author: g.de-boni-rovella
-"""
-
-# Imports
-
-import shutil, os, sys, time
-# os.environ["TF_USE_LEGACY_KERAS"] = "1"
-# import tf_keras as keras
-import numpy as np
-import matplotlib.pyplot as plt
-import tensorflow as tf
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-import functions as F
-# tf.keras.backend.set_floatx('float64') # uncomment for further floating point precision
-
-time_init = time.time()
-max_time = 48  # maximum simulation time in hours
-plt.rcParams['lines.linewidth'], plt.rcParams['lines.markersize'] = 1, 5 # for prettier figures
-
 '''
+@author: Gastón De Boni Rovella
+
 This script was made by Gastón De Boni Rovella in order for the reader to
 reproduce (or explore) the results of the two following articles:
     - "Improved Syndrome-based Neural Decoder for Linear Block Codes"
@@ -46,22 +26,32 @@ Feel free to try several options and analyze the resulting matrix.
     - 'random' transmits randomly generated codewords in every epoch
     - '01' tarnsmits a codeword with similar number of 0s and 1s
     
+3) Many things can be changed throughout the code. Go nuts.
+    
 Contact me (gdeboni@fing.edu.uy) if you have questions or corrections.
 '''
 
-print("TensorFlow version:", tf.__version__)
-if not tf.config.list_physical_devices('GPU'):
-    print("No GPU available, running on CPU only")
-else:
-    print("GPU OK")
+#%% Imports
+import shutil, os
+import numpy as np
+import matplotlib.pyplot as plt
+import tensorflow as tf
+import functions as F
+from time import time
+time_init = time()
+# tf.keras.backend.set_floatx('float64') # uncomment for further floating point precision
 
-# %% CHOOSE SIMULATION SETTINGS IN THIS SECTION
+#%% -----------------------------------------------------------------------
+#               CHOOSE SIMULATION SETTINGS IN THIS SECTION
+#   -----------------------------------------------------------------------
 
-# Modulator - example for 16-QAM: MOD_ORDER, MOD_TYPE = 4, 'QAM'
-MOD_ORDER, MOD_TYPE, SymOrder = 4, 'QAM', 'gray'  # 1/2/3/4/... - QAM/PSK and bin/gray/SP
+max_time = 48  # maximum total running time in hours
+
+# Modulator - example for 16-QAM: MOD_ORDER, MOD_TYPE, SymOrder = 4, 'QAM', 'gray'
+MOD_ORDER, MOD_TYPE, SymOrder = 4, 'QAM', 'gray'  # 1/2/3/4/... - QAM/PSK - bin/gray/SP
 
 # Error correcting code
-TYPE, n, k = 'POLAR', 128, 64  # 'BCH' 'POLAR'
+TYPE, n, k = 'POLAR', 128, 64  # See folder PC-matrices for available codes
 PCM_FORM = 'standright' # 'normal', 'standright', 'standleft', 'sparsify1', 'sparsify2', 'random'
 bit_gen = 'random'  # 'zeros', 'ones', 'random', '01'
 INTERLEAVER = True  # True or False for the presence of a bit-interleaver
@@ -85,6 +75,15 @@ test_batch_size = 2**9
 
 # Other parameters
 VERBOSE, PROGRESS = 0, True # select "0, False" for no output, or "1, True" for all outputs
+
+#%% Some inital checks 
+
+plt.rcParams['lines.linewidth'], plt.rcParams['lines.markersize'] = 1, 5 # for pretty figures
+print("TensorFlow version:", tf.__version__)
+if not tf.config.list_physical_devices('GPU'):
+    print("No GPU available, running on CPU only")
+else:
+    print("GPU OK")
 
 # %% Get modulator and code
 const = F.get_modulator(MOD_TYPE, MOD_ORDER, mode=SymOrder)
@@ -113,10 +112,9 @@ np.savetxt(save_path+'/G_{}_n{}_k{}.txt'.format(TYPE, n, k), G, fmt='%d')
 np.savetxt(save_path+'/H_{}_n{}_k{}.txt'.format(TYPE, n, k), H, fmt='%d')
 np.savetxt(save_path+'/A_{}_n{}_k{}.txt'.format(TYPE, n, k), A, fmt='%d')
 
-# %% """"""""""
-###########################################################################################
-########################## Definition of the models  ######################################
-###########################################################################################
+#%% -----------------------------------------------------------------------
+#                      Definition of the models  
+#   -----------------------------------------------------------------------
 
 # NN DECODER
 if type_NN == 'MLP':
@@ -156,16 +154,16 @@ train_generator = F.get_generator_SBND(
 
 # Define Callbacks
 EarlyStop = tf.keras.callbacks.EarlyStopping(monitor='sign_error_logits', mode='min', patience=patience, verbose=0)
-TimeStop = F.TimeOut(t0=time.time(), timeout=time_lim_hours)
+TimeStop = F.TimeOut(t0=time(), timeout=time_lim_hours)
 
 # training
-init_train = time.time()
+init_train = time()
 print('\n\n##############################################################')  
 print('                      Start of training')
 print('##############################################################\n')
 history_decod = decod_model.fit(train_generator, steps_per_epoch=100, epochs=epochs,
                                 callbacks=[EarlyStop, TimeStop], verbose=VERBOSE)
-print('\nTraining time = {:.3f} hours \n'.format((time.time()-init_train)/3600))
+print('\nTraining time = {:.3f} hours \n'.format((time()-init_train)/3600))
 
 loss, metric, fer_metric = [], [], []
 loss.extend(history_decod.history['loss'][:])
@@ -249,7 +247,7 @@ for i_ebn0 in range(len(EbN0dB_test)):
     nb_bin_errors, nb_bin_errors_cw, nb_block_errors, nb_block_errors_cw = 0, 0, 0, 0
 
     i_sim = 0
-    while (nb_block_errors < min_block_errors) & (i_sim < nb_sim_max) & (time.time()-time_init < max_time*3600):
+    while (nb_block_errors < min_block_errors) & (i_sim < nb_sim_max) & (time()-time_init < max_time*3600):
         i_sim += 1
 
         # message generation and coding
